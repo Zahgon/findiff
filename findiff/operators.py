@@ -10,7 +10,6 @@ from findiff.stencils import StencilSet
 
 
 class Expression(ABC):
-    """Represents a differential operator expression."""
 
     __array_priority__ = 100  # Makes sure custom multiplication is called over numpy's
 
@@ -39,8 +38,7 @@ class Expression(ABC):
         pass
 
     def stencil(self, shape):
-        """Returns a stencil representation of the differential operator for a given grid shape."""
-        return StencilSet(self, shape)
+        pass
 
     def __add__(self, other):
         """Allows to add differential operator expressions."""
@@ -68,37 +66,16 @@ class Expression(ABC):
 
     @property
     def grid(self):
-        """Returns the grid used."""
-        return getattr(self, "_grid", None)
+        pass
 
     def set_grid(self, grid):
-        """Sets the grid for the given differential operator expression.
-
-        Parameters
-        ----------
-        grid: dict | Grid
-            Specifies the grid to use. If a dict is given, an equidistant grid
-            is assumed and the dict specifies the spacings along the required axes.
-        """
-        self._grid = make_grid(grid)
-        for child in self.children:
-            child.set_grid(self._grid)
+        pass
 
     def set_accuracy(self, acc):
-        """Sets the requested accuracy for the given differential operator expression.
-
-        Parameters
-        ----------
-        acc: int
-            The accuracy order. Must be a positive, even number.
-        """
-        self.acc = acc
-        for child in self.children:
-            child.set_accuracy(acc)
+        pass
 
 
 class FieldOperator(Expression):
-    """An operator that multiplies an array pointwise."""
 
     def __init__(self, value):
         super().__init__()
@@ -119,7 +96,6 @@ class FieldOperator(Expression):
 
 
 class ScalarOperator(FieldOperator):
-    """A multiple of the identity operator."""
 
     def __init__(self, value):
         if not isinstance(value, numbers.Number):
@@ -135,7 +111,6 @@ class ScalarOperator(FieldOperator):
 
 
 class Identity(ScalarOperator):
-    """The identity operator."""
 
     def __init__(self):
         super().__init__(1)
@@ -145,11 +120,11 @@ class BinaryOperation(Expression):
 
     @property
     def left(self):
-        return self.children[0]
+        pass
 
     @property
     def right(self):
-        return self.children[1]
+        pass
 
 
 class Add(BinaryOperation):
@@ -209,27 +184,23 @@ class Diff(Expression):
         self._differentiator = None
 
     def set_grid(self, grid):
-        super().set_grid(grid)
-        self.set_axis(self.grid.get_axis(self.dim))
+        pass
 
     def set_axis(self, axis: GridAxis):
-        self._axis = axis
-        self._differentiator = None
+        pass
 
     @property
     def axis(self):
-        return self._axis
+        pass
 
     @property
     def order(self):
-        """Returns the order of the derivative."""
-        return self._order
+        pass
 
     def __call__(self, f, *args, **kwargs):
         """Applies the differential operator."""
 
         if "acc" in kwargs:
-            # allow to pass down new accuracy deep in expression tree
             new_acc = kwargs["acc"]
             if new_acc != self.acc:
                 self._differentiator = None
@@ -242,9 +213,7 @@ class Diff(Expression):
 
     @property
     def differentiator(self):
-        if self._differentiator is None:
-            self._differentiator = build_differentiator(self.order, self.axis, self.acc)
-        return self._differentiator
+        pass
 
     def matrix(self, shape):
         return self.differentiator.matrix(shape)

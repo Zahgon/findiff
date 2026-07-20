@@ -1,14 +1,3 @@
-"""
-This module determines finite difference coefficients for uniform and 
-non-uniform grids for any desired even accuracy order.
-
-Most important function:
-
-coefficients(deriv, acc=None, offsets=None, symbolic=False)
-
-to calculate the finite difference coefficients for a given derivative
-order and given accuracy order to given offsets.
-"""
 
 import math
 from itertools import combinations
@@ -66,11 +55,9 @@ def coefficients(deriv, acc=None, offsets=None, symbolic=False, analytic_inv=Fal
     num_central_coefs = 2 * math.floor((deriv + 1) / 2) - 1 + acc
     num_side_coefs = num_central_coefs // 2
 
-    # Determine central coefficients
     offsets = list(range(-num_side_coefs, num_side_coefs + 1))
     ret["center"] = calc_coefs(deriv, offsets, symbolic, analytic_inv)
 
-    # Determine forward coefficients
 
     if deriv % 2 == 0:
         num_coef = num_central_coefs + 1
@@ -80,7 +67,6 @@ def coefficients(deriv, acc=None, offsets=None, symbolic=False, analytic_inv=Fal
     offsets = list(range(num_coef))
     ret["forward"] = calc_coefs(deriv, offsets, symbolic, analytic_inv)
 
-    # Determine backward coefficients
 
     offsets = list(range(-num_coef + 1, 1))
     ret["backward"] = calc_coefs(deriv, offsets, symbolic, analytic_inv)
@@ -114,21 +100,15 @@ def compute_inverse_Vandermonde(column, offsets, symbolic):
     k = column + 1
     inv_vandermonde_column = []
     if k == n:
-        # If the number of offsets matches the derivative order + 1, there is a special
-        # case, compare the lower part of the bracket in the equation in proofwiki.
         for j in range(n):
             denom = prod(minus(offsets[j], offsets[:j])) * prod(
                 minus(offsets[j], offsets[j + 1 :])
             )
             inv_vandermonde_column.append(1 / denom)
     else:
-        # This is the "regular" part of the bracket. First compute the sign that is the
-        # same for all entries in the column that we compute
         sign = (-1) ** (n - k)
         for j in range(n):
-            # All indices except j
             range_wo_j = list(range(j)) + list(range(j + 1, n))
-            # Get all combinations of n-k indices that are ascending and do not contain j
             index_set = combinations(range_wo_j, r=n - k)
             enumerator = sum(prod(take(offsets, list(m))) for m in index_set)
             denominator = prod(minus(offsets[j], take(offsets, range_wo_j)))
@@ -267,9 +247,7 @@ def _calc_accuracy(offsets, coefs, deriv, symbolic=False):
 
     while True:
         b = 0
-        # for i, coef in enumerate(coefs):
         for o, coef in zip(offsets, coefs):
-            # k = min(offsets) + i
             b += coef * o**n
 
         if break_cond(b):

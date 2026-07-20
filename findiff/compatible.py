@@ -1,4 +1,3 @@
-"""This module provides an interface to obsolete classes for backward compatibility."""
 
 from findiff.interface import Diff
 from findiff.operators import FieldOperator, Identity
@@ -95,9 +94,6 @@ def FinDiff(*args, **kwargs):
     return diff_from_tuple(args)
 
 
-###
-### Define aliasses for backward compatibility:
-###
 
 
 class Coefficient(FieldOperator):

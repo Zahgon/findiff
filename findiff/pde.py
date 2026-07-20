@@ -1,7 +1,3 @@
-"""
-This module contains class for solving Partial Differential Equations (PDE)
-with Dirichlet and Neumann Boundary Conditions.
-"""
 
 
 import numpy as np
@@ -10,9 +6,6 @@ from scipy.sparse.linalg import spsolve
 
 
 class PDE:
-    """
-    Representation of a partial differential equation.
-    """
 
     def __init__(self, lhs, rhs, bcs):
         """
@@ -63,9 +56,6 @@ class PDE:
 
 
 class BoundaryConditions:
-    """
-    Represents Dirichlet or Neumann boundary conditions for a PDE.
-    """
 
     def __init__(self, shape):
         """
@@ -107,7 +97,6 @@ class BoundaryConditions:
 
         if isinstance(value, tuple): # Neumann BC
             op, value = value
-            # Avoid calling matrix for the whole grid! Optimize later!
             mat = sparse.lil_matrix(op.matrix(self.shape))
             self.lhs[lng_inds, :] = mat[lng_inds, :]
         else: # Dirichlet BC

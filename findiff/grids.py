@@ -34,7 +34,7 @@ class Grid:
         self.axes = {ax.dim: ax for ax in axes}
 
     def get_axis(self, dim: int) -> GridAxis:
-        return self.axes.get(dim)
+        pass
 
 
 def make_grid(config_or_grid):

@@ -33,41 +33,13 @@ class _FinDiffBase:
         self.order = order
 
     def guard_valid_target(self, f):
-        try:
-            f.shape[self.axis]
-        except AttributeError as err:
-            raise ValueError(
-                "Diff objects can only be applied to arrays or evaluated(!) functions returning arrays"
-            ) from err
-
-        if np.issubdtype(f.dtype, np.integer):
-            f = f.astype(np.float64)
-        return f
+        pass
 
     def apply_to_array(self, yd, y, weights, off_slices, ref_slice, dim):
-        """Applies the finite differences only to slices along a given axis"""
-
-        ndims = len(y.shape)
-
-        all = slice(None, None, 1)
-
-        ref_multi_slice = [all] * ndims
-        ref_multi_slice[dim] = ref_slice
-
-        for w, s in zip(weights, off_slices):
-            off_multi_slice = [all] * ndims
-            off_multi_slice[dim] = s
-            if abs(1 - w) < 1.0e-14:
-                yd[tuple(ref_multi_slice)] += y[tuple(off_multi_slice)]
-            else:
-                yd[tuple(ref_multi_slice)] += w * y[tuple(off_multi_slice)]
+        pass
 
     def shift_slice(self, sl, off, max_index):
-
-        if sl.start + off < 0 or sl.stop + off > max_index:
-            raise IndexError("Shift slice out of bounds")
-
-        return slice(sl.start + off, sl.stop + off, sl.step)
+        pass
 
     def matrix(self, shape):
         siz = np.prod(shape)
@@ -107,31 +79,13 @@ class _FinDiffUniform(_FinDiffBase):
         return fd * h_inv
 
     def _apply_backward_coefs(self, f, fd, npts, num_bndry_points):
-        weights = self.backward["coefficients"]
-        offsets = self.backward["offsets"]
-        ref_slice = slice(npts - num_bndry_points, npts, 1)
-        off_slices = [
-            self.shift_slice(ref_slice, offsets[k], npts) for k in range(len(offsets))
-        ]
-        self.apply_to_array(fd, f, weights, off_slices, ref_slice, self.axis)
+        pass
 
     def _apply_forward_coefs(self, f, fd, npts, num_bndry_points):
-        weights = self.forward["coefficients"]
-        offsets = self.forward["offsets"]
-        ref_slice = slice(0, num_bndry_points, 1)
-        off_slices = [
-            self.shift_slice(ref_slice, offsets[k], npts) for k in range(len(offsets))
-        ]
-        self.apply_to_array(fd, f, weights, off_slices, ref_slice, self.axis)
+        pass
 
     def _apply_central_coefs(self, f, fd, npts, num_bndry_points):
-        weights = self.center["coefficients"]
-        offsets = self.center["offsets"]
-        ref_slice = slice(num_bndry_points, npts - num_bndry_points, 1)
-        off_slices = [
-            self.shift_slice(ref_slice, offsets[k], npts) for k in range(len(offsets))
-        ]
-        self.apply_to_array(fd, f, weights, off_slices, ref_slice, self.axis)
+        pass
 
     def write_matrix_entries(self, mat, shape):
         long_indices_nd = get_long_indices_for_all_grid_points_as_ndarray(shape)

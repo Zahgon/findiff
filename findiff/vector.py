@@ -1,4 +1,3 @@
-"""A module for the common differential operators of vector calculus"""
 
 import numpy as np
 
@@ -6,9 +5,6 @@ from .compatible import FinDiff
 
 
 class VectorOperator:
-    """Base class for all vector differential operators.
-    Shall not be instantiated directly, but through the child classes.
-    """
 
     def __init__(self, **kwargs):
         """Constructor for the VectorOperator base class.
@@ -49,27 +45,10 @@ class VectorOperator:
             ]
 
     def __get_dimension(self, coords):
-        return len(coords)
+        pass
 
 
 class Gradient(VectorOperator):
-    r"""
-    The N-dimensional gradient.
-
-    .. math::
-        \nabla = \left(\frac{\partial}{\partial x_0}, \frac{\partial}{\partial x_1}, ... , \frac{\partial}{\partial x_{N-1}}\right)
-
-    :param kwargs:  exactly one of *h* and *coords* must be specified
-
-             *h*
-                     list with the grid spacings of an N-dimensional uniform grid
-             *coords*
-                     list of 1D arrays with the coordinate values along the N axes.
-                     This is used for non-uniform grids.
-
-             *acc*
-                     accuracy order, must be positive integer, default is 2
-    """
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -105,25 +84,6 @@ class Gradient(VectorOperator):
 
 
 class Divergence(VectorOperator):
-    r"""
-    The N-dimensional divergence.
-
-    .. math::
-
-       {\rm \bf div} = \nabla \cdot
-
-    :param kwargs:  exactly one of *h* and *coords* must be specified
-
-         *h*
-                 list with the grid spacings of an N-dimensional uniform grid
-         *coords*
-                 list of 1D arrays with the coordinate values along the N axes.
-                 This is used for non-uniform grids.
-
-         *acc*
-                 accuracy order, must be positive integer, default is 2
-
-    """
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -160,28 +120,6 @@ class Divergence(VectorOperator):
 
 
 class Curl(VectorOperator):
-    r"""
-    The curl operator.
-
-    .. math::
-
-        {\rm \bf rot} = \nabla \times
-
-    Is only defined for 3D.
-
-    :param kwargs:  exactly one of *h* and *coords* must be specified
-
-     *h*
-             list with the grid spacings of a 3-dimensional uniform grid
-     *coords*
-             list of 1D arrays with the coordinate values along the 3 axes.
-             This is used for non-uniform grids.
-
-     *acc*
-             accuracy order, must be positive integer, default is 2
-
-
-    """
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -231,25 +169,6 @@ class Curl(VectorOperator):
 
 
 class Laplacian:
-    r"""
-    The N-dimensional Laplace operator.
-
-    .. math::
-
-       {\rm \bf \nabla^2} = \sum_{k=0}^{N-1} \frac{\partial^2}{\partial x_k^2}
-
-    :param kwargs:  exactly one of *h* and *coords* must be specified
-
-         *h*
-                 list with the grid spacings of an N-dimensional uniform grid
-         *coords*
-                 list of 1D arrays with the coordinate values along the N axes.
-                 This is used for non-uniform grids.
-
-         *acc*
-                 accuracy order, must be positive integer, default is 2
-
-    """
 
     """A representation of the Laplace operator in arbitrary dimensions using finite difference schemes"""
 
@@ -281,14 +200,4 @@ class Laplacian:
 
 
 def wrap_in_ndarray(value):
-    """Wraps the argument in a numpy.ndarray.
-
-    If value is a scalar, it is converted in a list first.
-    If value is array-like, the shape is conserved.
-
-    """
-
-    if hasattr(value, "__len__"):
-        return np.array(value)
-    else:
-        return np.array([value])
+    pass
